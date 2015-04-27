@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="chibihikaru-tilea2" tilewidth="32" tileheight="32">
+  <image source="chibihikaru-tilea2.png" width="512" height="384"/>
+ </tileset>
+ <tileset firstgid="193" name="tilee3" tilewidth="32" tileheight="32">
+  <image source="tilee3.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="449" name="tilea4" tilewidth="32" tileheight="32">
+  <image source="tilea4.png" width="512" height="480"/>
+ </tileset>
+ <layer name="Background" width="100" height="100">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3ZoRGAQBAEwbOP/Bg/AfI3BAFiqGrRCezI3TOzP3Lxmh1b9GjRo0WPFj1a9GjRo0WPFj1a9GjRo0WPFj1a9GjRo0WPFj1afHsterTo0aIFAAAAAGWLlBsAAAAAAAAAAAAAAIC0AwAAAAAAAAAAAAAAAPBTD16kq0xAnAAA
+  </data>
+ </layer>
+ <layer name="Objects" width="100" height="100">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3BMQEAAADCoPVP7WULoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgBt5RKnmQJwAAA==
+  </data>
+ </layer>
+</map>
