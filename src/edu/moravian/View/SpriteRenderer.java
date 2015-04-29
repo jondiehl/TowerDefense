@@ -18,7 +18,7 @@ public class SpriteRenderer {
 	private Image gold = null;
 	private Image spriteSheetImage, spriteSheetImage2 = null;
 	private SpriteSheet spriteSheet, spriteSheet2;
-	private Animation spearUp, spearDown, spearLeft, spearRight, spearStill, naziUp, naziDown, naziLeft, naziRight, naziStill;
+	private Animation spearUp, spearDown, spearLeft, spearRight, spearStill, naziUp, naziDown, naziLeft, naziRight, naziRightStill, naziStill;
 	private int spriteWidth;
 	private int spriteHeight;
 	private float spriteSheetWidth;
@@ -26,13 +26,14 @@ public class SpriteRenderer {
 	private int spritesPerRow = 11;
 	private int spritesPerColumn = 4;
 	private int duration = 200; // Time to display each sprite
-	private int duration2 = 50;
+	private int duration2 = 100;
 	private int spriteX;
 	private int spriteY;
 	private final CoordinateTranslator coordTran;
 	
 	public SpriteRenderer() throws SlickException {
 		gold = new Image("res2/gold.png");
+		gold = gold.getScaledCopy((float)0.65);
 		spriteSheetImage = new Image("res2/spearDude.png");
 		spriteSheetImage2 = new Image("res2/nazi_sprite.png");
 		spriteSheetWidth = spriteSheetImage.getWidth();
@@ -52,6 +53,7 @@ public class SpriteRenderer {
 	    spearStill	= new Animation(spriteSheet, 0, 0, 0, 0, true, duration, true);
 	    naziUp    = new Animation(spriteSheet2, 0, 1, 6, 1, true, duration2, true);
 	    naziRight   = new Animation(spriteSheet2, 0, 3, 6, 3, true, duration2, true);
+	    naziRightStill   = new Animation(spriteSheet2, 0, 3, 0, 3, true, duration2, true);
 	    naziDown    = new Animation(spriteSheet2, 0, 0, 6, 0, true, duration2, true);
 	    naziLeft    = new Animation(spriteSheet2, 0, 2, 6, 2, true, duration2, true);
 	    naziStill	= new Animation(spriteSheet2, 0, 0, 0, 0, true, duration, true); 
@@ -109,8 +111,7 @@ public class SpriteRenderer {
 		}
 		else {
 			throw new RuntimeException("Could not render");
-		}
-		
+		}	
 	}
 	
 	private void renderPlayer(Player player) {
@@ -135,19 +136,22 @@ public class SpriteRenderer {
 	private void renderAgent(Agent agent) {
 		
 		if (agent.getState() == "up") {
-			naziUp.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.5));
+			naziUp.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.8));
 		}
 		if (agent.getState() == "down") {
-			naziDown.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.5));
+			naziDown.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.8));
 		}
 		if (agent.getState() == "left") {
-			naziLeft.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.5));
+			naziLeft.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.8));
 		}
 		if (agent.getState() == "right") {
-			naziRight.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.5));
+			naziRight.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.8));
+		}
+		if (agent.getState() == "rightStill") {
+			naziRightStill.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.8));
 		}
 		if (agent.getState() == "still") {
-			naziStill.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.5));
+			naziStill.draw((float)(spriteX - spriteWidth*.5), (float)(spriteY - spriteHeight*.8));
 		}
 	}
 	

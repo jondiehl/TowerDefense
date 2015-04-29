@@ -32,31 +32,29 @@ public class GameMap implements GameMapInterface {
 		//going to need a helper function to map all points in a cell to that cell
 		
 		ArrayList<Point2D> ret = new ArrayList<Point2D>();
-		int x = (int)p.getX()/32;
-		int y = (int)p.getY()/32;
+		int x = (int)p.getX();
+		int y = (int)p.getY();
 		int objectLayer = map.getLayerIndex("Objects");
 		
 		//search a specific (x,y) position to determine if there is an object present,
 		//	if there is NOT then add it to the list of neighbors.
 		//for each neighbor v of p
-		System.out.println("used x:" + x);
-		System.out.println("used y:" + y);
+//		System.out.println("used x:" + x);
+//		System.out.println("used y:" + y);
 		
 		int count = 0;
 		for(int i=x-1; i < x+2; i++) {
 			for(int j=y-1; j < y+2; j++) {
 				//SURROUND BY IF THAT CHECKS FOR -1 & 100
 				if (i >= 0 && i < map.getWidth()) {
-//				if (i != 101 && i != 100 && i != -1) {
-					if (j >= 0 && j < map.getWidth()) {//j != 101 && j != 100 && j != -1) {
+					if (j >= 0 && j < map.getHeight()) {
 						if (i!=x || j!=y) {
 							if (map.getTileId(i, j, objectLayer) == 0) {
-								System.out.println("\"no object here\"===================" + ++count);
+//								System.out.println("\"no object here\"===================" + ++count);
 								ret.add(new Point2D(i,j));
 							}
 						}
 					}
-//				}
 				}
 			}
 		}

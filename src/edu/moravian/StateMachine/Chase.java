@@ -42,11 +42,14 @@ public class Chase implements AgentState
         }
         else if (health == 0 && energy == 0 || energy == 0)
         {
+        	
             agentEntity.changeState(Rest.getInstance());
         }
         else
         {
+        	
             agentEntity.changeState(Eat.getInstance());
+            agentEntity.genEatPath();
         }
     }
 

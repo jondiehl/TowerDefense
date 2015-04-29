@@ -1,5 +1,6 @@
 
 package edu.moravian.StateMachine;
+
 import edu.moravian.Game.Game;
 import edu.moravian.Math.Point2D;
 import edu.moravian.Math.Vector2D;
@@ -8,9 +9,13 @@ import edu.moravian.Entity.Agent;
 public class Eat implements AgentState
 {
     private static Eat instance;
+    private double agentWX, agentWY;
+//    private Point2D eatLoc = new Point2D(3*32, 4*32);
+//    private Point2D p1,p2;
+//    private Point2D dest = new Point2D(100, 100);
+//    private Vector2D agentLoc, result, newLoc;
+    
     private Eat() {}
-    private Point2D p1,p2;
-    private Vector2D dest , agentLoc, result, newLoc;
     
     public static Eat getInstance()
     {
@@ -22,23 +27,27 @@ public class Eat implements AgentState
     @Override
     public void Execute(Agent agentEntity) 
     {
+    	Point2D eatLoc = agentEntity.nextEatNode();
         int health = agentEntity.getHealth();
-        if(agentEntity.getEnergy()!=0 && health!=agentEntity.getMaxHealth())
+        int maxHealth = agentEntity.getMaxHealth();
+        int energy = agentEntity.getEnergy();
+        
+        if(energy !=0 && health != maxHealth)
         {
-            if(agentEntity.getEntitySx() != Game.getInstance().getWorldWidth()/2 || agentEntity.getEntitySy() != Game.getInstance().getWorldHeight()/2)
+            if(agentEntity.getEntitySx() == eatLoc.getX() && agentEntity.getEntitySy() == eatLoc.getY()) //agentEntity.getEntitySx() != Game.getInstance().getWorldWidth()/2 || agentEntity.getEntitySy() != Game.getInstance().getWorldHeight()/2)
             {
-                int energy = agentEntity.getEnergy();
-                this.performAction(agentEntity);
-                energy -= .01;
-                agentEntity.setEnergy(energy);
+            	health += 5;
+            	agentEntity.setHealth(health);
+            	agentEntity.setState("rightStill");
             }
             else
             {
-                health += 5;
-                agentEntity.setHealth(health);
+            	this.performAction(agentEntity);
+                energy -= .01;
+                agentEntity.setEnergy(energy);
             }
         }
-        else if (agentEntity.getEnergy()==0)
+        else if (energy == 0)
         {
             agentEntity.changeState(Rest.getInstance());
         }
@@ -46,37 +55,98 @@ public class Eat implements AgentState
         {
             agentEntity.changeState(Chase.getInstance());
         }
-        agentEntity.setState("still");
     }
 
     @Override
     public void performAction(Agent agentEntity) 
     {
+    	// Eat Map Location
+        Point2D eatNode = agentEntity.nextEatNode();
+        double eatMX = eatNode.getX();
+        double eatMY = eatNode.getY();
+        // Agent Map Location
         int agentMX = agentEntity.getEntitySx();
         int agentMY = agentEntity.getEntitySy();
-       
-
         int delta = Game.getInstance().getDelta();
-        double speed = 1/30;
-        double velocity = 2;
         
-        dest = new Vector2D(5,5);
-        agentLoc = new Vector2D(agentEntity.getEntityWx(), agentEntity.getEntityWy());
-        result = dest.minus(agentLoc);
+        if(eatMX != agentMX) {
+            if(eatMX > agentMX) {
+                if((eatMX - agentMX) > Game.getInstance().getWorldWidth()*32/2) {
+                    agentWX = (agentEntity.getEntityWx() -1*delta / 50.0);
+                    if(agentWX < 0)
+                        agentWX = Game.getInstance().getWorldWidth()*32*Game.getInstance().getWorldWidth()/Game.getInstance().getScreenWidth();
+                }
+                else {
+                    agentWX =(agentEntity.getEntityWx() +1*delta / 50.0) % ((Game.getInstance().getWorldWidth()*32*Game.getInstance().getWorldWidth())/Game.getInstance().getScreenWidth());
+                }
+                agentEntity.setState("right");
+            }
+            else if(eatMX < agentMX) {
+                if((agentMX - eatMX) > Game.getInstance().getWorldWidth()*32/2) {
+                    agentWX =(agentEntity.getEntityWx() +1*delta / 50.0) % ((Game.getInstance().getWorldWidth()*32*Game.getInstance().getWorldWidth())/Game.getInstance().getScreenWidth());
+                }
+                else {
+                    agentWX = (agentEntity.getEntityWx() -1*delta / 50.0);
+                    if(agentWX < 0)
+                        agentWX = Game.getInstance().getWorldWidth()*32*Game.getInstance().getWorldWidth()/Game.getInstance().getScreenWidth();
+                }
+                agentEntity.setState("left");
+
+            }
+            agentEntity.setEntityWX(agentWX);
+        }
+        if(eatMY != agentMY) {
+            if(eatMY > agentMY) {
+                if((eatMY - agentMY) > Game.getInstance().getWorldHeight()*32/2) {
+                    agentWY = (agentEntity.getEntityWy() -1*delta / 50.0);
+                    if(agentWY < 0)
+                        agentWY = Game.getInstance().getWorldHeight()*32*Game.getInstance().getWorldHeight()/Game.getInstance().getScreenHeight();
+                }
+                else {
+                    agentWY =(agentEntity.getEntityWy() +1*delta / 50.0) % ((Game.getInstance().getWorldHeight()*32*Game.getInstance().getWorldHeight())/Game.getInstance().getScreenHeight());
+                }
+                agentEntity.setState("down");
+            }
+            else if(eatMY < agentMY) {
+                if((agentMY - eatMY) > Game.getInstance().getWorldHeight()*32/2) {
+                    agentWY =(agentEntity.getEntityWy() +1*delta / 50.0) % ((Game.getInstance().getWorldHeight()*32*Game.getInstance().getWorldHeight())/Game.getInstance().getScreenHeight());
+                }
+                else {
+                    agentWY = (agentEntity.getEntityWy() -1*delta / 50.0);
+                    if(agentWY < 0)
+                        agentWX = Game.getInstance().getWorldHeight()*32*Game.getInstance().getWorldHeight()/Game.getInstance().getScreenHeight();
+                }
+                agentEntity.setState("up");
+            }
+            agentEntity.setEntityWY(agentWY);
+        }
+    	
+    	
+//        int agentMX = agentEntity.getEntitySx();
+//        int agentMY = agentEntity.getEntitySy();
+//       
+
+//        int delta = Game.getInstance().getDelta();
+//        double speed = 1/30;
+//        double velocity = 2;
 //        
-//        newLoc = move(agentLoc, result, speed, delta);
-//        System.out.println(newLoc.getX());
-//        agentEntity.setEntityWX(newLoc.getX());
-//        agentEntity.setEntityWY(newLoc.getY());
-            
-        Vector2D playerPos = new Vector2D(agentEntity.getEntityWx(), agentEntity.getEntityWy());
-        Vector2D direction = dest.minus(agentLoc);
-        direction.normalize();
-        playerPos.plusEquals(direction);
-        playerPos.timesEquals(velocity);
-        
-        agentEntity.setEntityWX(playerPos.getX());
-        agentEntity.setEntityWY(playerPos.getY());
+//        dest = new Vector2D(5,5);
+//        agentLoc = new Vector2D(agentEntity.getEntityWx(), agentEntity.getEntityWy());
+//        result = dest.minus(agentLoc);
+////        
+////        newLoc = move(agentLoc, result, speed, delta);
+////        System.out.println(newLoc.getX());
+////        agentEntity.setEntityWX(newLoc.getX());
+////        agentEntity.setEntityWY(newLoc.getY());
+//            
+//        Vector2D playerPos = new Vector2D(agentEntity.getEntityWx(), agentEntity.getEntityWy());
+//        Vector2D direction = dest.minus(agentLoc);
+//        direction.normalize();
+//        playerPos.plusEquals(direction);
+//        playerPos.timesEquals(velocity);
+//        
+//        agentEntity.setEntityWX(playerPos.getX());
+//        agentEntity.setEntityWY(playerPos.getY());
             
 //        agentEntity.setEntityWX(agentWX);
         

@@ -18,7 +18,7 @@ import edu.moravian.Entity.Entity;
 import edu.moravian.Entity.Player;
 import edu.moravian.Entity.Prize;
 import edu.moravian.Math.CoordinateTranslator;
-import edu.moravian.Math.Point2D; //added bc of testing
+import edu.moravian.Math.Point2D;
 import edu.moravian.View.SpriteRenderer;
 import edu.moravian.View.miniMap;
 
@@ -52,14 +52,14 @@ public class Game extends BasicGame {
 	
 	public static Game getInstance() {
 		if (instance == null) {
-			instance = new Game("Jon's Game 2");
+			instance = new Game("Jon's Game 3");
 		}
 		return instance;
 	}
 	
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
-		this.getMapFromFile();
+		this.getMapFromFile("res2/data.txt");
 		CT = new CoordinateTranslator(tMap.getWidth(), tMap.getHeight(), 0, 0, screenWidth, screenHeight);
 		map = new GameMap(tMap);
 		miniMap = new miniMap(instance, "res2/miniMapPic.png");
@@ -71,12 +71,12 @@ public class Game extends BasicGame {
 		prizeRen = new SpriteRenderer();
 		prizesFound = 0;
 		deaths = 0;
-		x = 0; y = 0;
+		x = y = 0;
 		ents = new ArrayList<Entity>();
 		ents.add(player = new Player());
-		ents.add(agent1 = new Agent(22000, 18000));
-		ents.add(agent2 = new Agent(25000, 20000));
-		ents.add(agent3 = new Agent(1000, 28000));//30000, 28000));
+		ents.add(agent1 = new Agent(25000, 10));
+		ents.add(agent2 = new Agent(27000, 20));
+		ents.add(agent3 = new Agent(1000, 15000));//30000, 28000)); hunger, energy
 		ents.add(prize = new Prize());
 		gsm = new GameSoundManager();
 		exit = false;
@@ -158,7 +158,7 @@ public class Game extends BasicGame {
         prizeRen.update(map, prize);
         
         //Collision detection
-        if(Collision.checkCollision(player.getEntitySx(), player.getEntitySy(), prize.getEntitySx(), prize.getEntitySy())) {
+        if(Collision.checkCollisionPrize(player.getEntitySx(), player.getEntitySy(), prize.getEntitySx(), prize.getEntitySy())) {
             prizesFound += 1;
             prize.reset();
         }
@@ -288,8 +288,8 @@ public class Game extends BasicGame {
 		return new Point2D(real_x, real_y);
 	}
 	
-	public TiledMap getMapFromFile() throws SlickException {
-		File file = new File("res2/data.txt");
+	public TiledMap getMapFromFile(String filename) throws SlickException {
+		File file = new File(filename);
         try {
             Scanner scanner = new Scanner(file);
             String mapPath = scanner.nextLine();
@@ -299,6 +299,10 @@ public class Game extends BasicGame {
             System.out.println("File Not Found");
         }
 		return tMap;
+	}
+	
+	public GameMap getGameMap() {
+		return map;
 	}
 
 	public CoordinateTranslator getCT() {
