@@ -1,137 +1,103 @@
-package edu.moravian.Entity;
+package edu.Moravian.Entity;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import edu.moravian.Game.Game;
-import edu.moravian.Math.Point2D;
-import edu.moravian.Math.Vector2D;
-import edu.moravian.PathFinding.PathFinder;
-import edu.moravian.StateMachine.AgentState;
-import edu.moravian.StateMachine.Chase;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
+import edu.Moravian.Game.Game;
+import edu.Moravian.Math.Point2D;
 
 public class Agent extends Entity {
 	
-	private AgentState currentState;
-	private String currentMovementState;
-    private final int maxEnergy;
-    private int energy;
-    private final int maxHealth;
-    private int health;
-    private PathFinder pf;
-//    private Point2D eatLoc = new Point2D(5*32, 2*32);
-    private Point2D eatLoc = new Point2D(96, 32);
-    private Point2D restLoc = new Point2D(94*32, 4*32);
-    private Point2D currEatNode;
-    private Point2D currRestNode;
-    private Iterator<Point2D> eatIT;
-    private Iterator<Point2D> restIT;
-    private ArrayList<Point2D> path;
+	private int health;
+	private int maxHealth;
+	private Image img;
+	private int velocity;
+	private double distance;
+	private Point2D nextNode;
+	private ArrayList<Point2D> path;
+	private Iterator<Point2D> pathIT;
+	double locX, locY, nextX, nextY;
+	public boolean dead;
 
-    public Agent(int maxHealth, int maxEnergy) 
-    {
-    	this.type = "agent";
-        this.currentState = Chase.getInstance();
-        this.maxEnergy = maxEnergy;
-        this.energy = maxEnergy;
-        this.maxHealth = maxHealth;
-        this.health = maxHealth;
-        this.entityWx = (int) (Math.random()*((CT.getWorldWidth()*32)*CT.getWorldWidth()/CT.getScreenWidth()));
-        this.entityWy = (int) (Math.random()*((CT.getWorldHeight()*32)*CT.getWorldHeight()/CT.getScreenHeight()));
-        pf = new PathFinder(Game.getInstance().getGameMap());
-    }
-    
-    @Override
-    public void update() 
-    {
-        Point entityCT = CT.worldToScreen(entityWx, entityWy);
-        entitySx = (int) entityCT.getX();
-        entitySy = (int)(entityCT.getY() - CT.getScreenHeight())*-1;
-        currentState.Execute(this);
-    }
-    
-    @Override
-    public void reset()
-    {
-        this.entityWx = (int) (Math.random()*((CT.getWorldWidth()*32)*CT.getWorldWidth()/CT.getScreenWidth()));
-        this.entityWy = (int) (Math.random()*((CT.getWorldHeight()*32)*CT.getWorldHeight()/CT.getScreenHeight()));
-    }
-    
-    public void genEatPath() {
-//    	System.out.println("ent x: " + entitySx + ", ent y: " + entitySy);
-//    	System.out.println("eat x: " + eatLoc.getX() + ", eat y: " + eatLoc.getY());
-    	pf.generatePath(new Point2D(entitySx, entitySy), eatLoc);
-    	System.out.println("ent x: " + entitySx + ", ent y: " + entitySy);
-    	System.out.println("eat x: " + eatLoc.getX() + ", eat y: " + eatLoc.getY());
-    	System.out.println("here in gen path2");
-    	
-//    	eatIT = pf.getPath().iterator();
-    	path = pf.getPath();
-    	eatIT = path.iterator();
-    	System.out.println("here");
-    	currEatNode = eatIT.next();
-    	System.out.println("currEatNote gen: " + currEatNode);
-    	System.out.println("path: " + path);
-    }
-    
-    public Point2D nextEatNode () {
-    	if (new Point2D(entitySx, entitySy).equals(currEatNode)) {
-    		if (eatIT.hasNext())
-    			currEatNode = eatIT.next();
-    	}
-    	System.out.println("currEatNode next: " + currEatNode);
-    	System.out.println("currAGENTNode next: " + entitySx + ", " + entitySy);
-    	
-    	return new Point2D(currEatNode.getX(), currEatNode.getY());
-    }
-    
-    public void changeState(AgentState newState)
-    {
-        currentState = newState;
-    }
-    
-    public void setEntityWX(double entityWX)
-    {
-        this.entityWx = entityWX;
-    }
-    
-    public void setEntityWY(double entityWY)
-    {
-        this.entityWy = entityWY;
-    }
-    
-    public int getEnergy() {
-        return energy;
-    }
-
-    public int getMaxEnergy() {
-        return maxEnergy;
-    }
-    
-    public void setEnergy(int energy) {
-        this.energy = energy;
-    }
-
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-	@Override
-	public void setState(String state) {
-		currentMovementState = state;
+	public Agent(int maxHealth) throws SlickException {
+		img = new Image("res2/bomb.png");
+		this.health = maxHealth;
+		this.maxHealth = maxHealth;
+		distance = 0;
+		velocity = 600;
+		dead = false;
+		path = new ArrayList<Point2D>(); 	
+		path.add(new Point2D(2110, 2500)); path.add(new Point2D(2110, 2242)); //64,2242
+		path.add(new Point2D(2110, 1730)); path.add(new Point2D(318, 1730));
+		path.add(new Point2D(318, 450)); path.add(new Point2D(2496, 450));
+		
+		pathIT  = path.iterator();
+		this.location = nextNode = pathIT.next();
+		locX = nextX = location.getX();
+		locY = nextY = location.getY();
 	}
-
-	@Override
-	public String getState() {
-		return currentMovementState;
+	
+	public void update(int delta) {
+		if ( ( Math.abs(nextNode.getX() - location.getX()) < 10 && Math.abs(nextNode.getY() - location.getY()) < 10) ) {
+			if(pathIT.hasNext())
+				nextNode = pathIT.next();
+			else {
+				dead = true;
+				Game.getInstance().setLives(Game.getInstance().getLives()-1);
+			}
+		}
+		
+		distance = (velocity*delta)/1000;
+		
+		nextX = nextNode.getX();
+		nextY = nextNode.getY();
+		locX = location.getX();
+		locY = location.getY();
+		
+		if(locX < nextX) 
+			locX += distance;
+		else if(locX > nextX)
+			locX -= distance;
+		
+		if(locY < nextY)
+			locY += distance;
+		else if (locY > nextY)
+			locY -= distance;
+		
+		location = new Point2D(locX, locY);
+	}
+	
+	public void render(Graphics g) {
+		Point screenLocation = Game.getInstance().getCT().worldToScreen(location);
+		g.drawImage(img, (float)screenLocation.x, (float)screenLocation.y);
+	}
+	
+	public void move() {
+		
+	}
+	
+	public void setLocation(Point2D loc) {
+		this.location = loc;
+	}
+	
+	public void takeDamage(int damage) {
+		if ( (health - damage) < 0) {
+			health = 0;
+		}
+		else
+			this.health -= damage;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public int getMaxHealth() {
+		return maxHealth;
 	}
 }

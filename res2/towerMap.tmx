@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="chibihikaru-tilea2" tilewidth="32" tileheight="32">
+  <image source="chibihikaru-tilea2.png" width="512" height="384"/>
+ </tileset>
+ <tileset firstgid="193" name="tilea2" tilewidth="32" tileheight="32">
+  <image source="tilea2.png" width="512" height="384"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA62U0Q3DIAxEyQLZIN2g/Wk3SBcvG5gNYJIShZNOJzuRmn48kQZ4uDbOc0rpk3ayjHjO8o7nWqcMXt1lwTpz3JGP8eJQjmKeO7dOHT4blAM4Zl07D+Dz4sdvozE6Az7NMfboGerVOODjczYWmvsFrccV18OpGebwnnMEvFxwrbDHnLy25Nchutec1yo+1AVrmHLiQwzsa+TkPHPckQ+j+prEqnmNes+7R1wHdXk9oGu5HtG3Rt1cU+2bms7vC2LLtNerl/bhVfD/7n/yGcH9z73P98CESmzz67Q/q0ddETz/7q4vrNy6W0AGAAA=
+  </data>
+ </layer>
+ <layer name="Path" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgoAzwQTG1wEgx7yCVzYMBXObJIsmRg3HZQw7WI8Hd5IJR80bNI8c8SjEM6FLZvMEKAIEVTJdABgAA
+  </data>
+ </layer>
+</map>

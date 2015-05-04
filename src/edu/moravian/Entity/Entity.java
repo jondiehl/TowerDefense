@@ -1,44 +1,13 @@
-package edu.moravian.Entity;
+package edu.Moravian.Entity;
 
-import edu.moravian.Game.Game;
-import edu.moravian.Math.CoordinateTranslator;
+import edu.Moravian.Math.Point2D;
 
 public abstract class Entity {
+
+	protected Point2D location;
 	
-	protected final CoordinateTranslator CT = Game.getInstance().getCT();
-	protected int delta, entitySx, entitySy;
-	protected double entityWx, entityWy;
-	protected String type;
-	
-	public Entity() {
+	// In World Coordinates
+	public Point2D getLocation() {
+		return location;
 	}
-	
-	public abstract void update();
-	
-	public abstract void reset();
-	
-	public int getEntitySx() {
-		return entitySx;
-	}
-	
-	public int getEntitySy() {
-		return entitySy;
-	}
-	
-	public double getEntityWx() {
-		return entityWx;
-	}
-	
-	public double getEntityWy() {
-		return entityWy;
-	}
-	
-	public abstract void setState(String state);
-	
-	public abstract String getState();
-	
-	public String getType() {
-		return type;
-	}
-	
 }
